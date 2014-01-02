@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+<FrameLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Hello World, MyActivity"
-    />
-</LinearLayout>
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Button
+        android:layout_width="157dp"
+        android:layout_height="89dp"
+        android:text="@string/button0"
+        android:id="@+id/button"
+        android:onClick="onClick"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/latitude"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="15dp"/>
+
+    <EditText
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/longitude"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/lat"
+        android:id="@+id/textView"
+        android:layout_gravity="top"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="45dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/lon"
+        android:id="@+id/textView2"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="45dp"/>
+
+</FrameLayout>

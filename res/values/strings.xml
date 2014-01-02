@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MyActivity</string>
+    <string name="app_name">GPS Locator</string>
+    <string name="button0">Point The Way</string>
+    <string name="lat">Latitude</string>
+    <string name="lon">Longitude</string>
 </resources>
