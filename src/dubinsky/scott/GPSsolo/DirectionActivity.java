@@ -3,6 +3,10 @@ package dubinsky.scott.GPSsolo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,52 +15,61 @@ import android.widget.TextView;
 
 /**
  * Created by Scott Dubinsky on 1/1/14.
+ * http://www.codingforandroid.com/2011/01/using-orientation-sensors-simple.html
+ * http://www.helloandroid.com/tutorials/using-android-phones-sensors
+ * http://www.journal.deviantdev.com/android-compass-azimuth-calculating/
+ * http://stackoverflow.com/questions/4819626/android-phone-orientation-overview-including-compass
+ * http://developer.android.com/reference/android/hardware/SensorManager.html#getOrientation(float[], float[])
+ *
+ * Given the sensor info from the accelerometer and magnetic field sensors, the phone can figure out what its
+ * azimuth relative to north is.  I need to draw a line from phone to arbitrary point and find that azimuth instead.
+ *
+ * Also need to account for screen rotation(unless I lock the screen? That seems easiest).
  */
-public class DirectionActivity extends Activity {
+public class DirectionActivity extends Activity implements SensorEventListener{
+    private SensorManager sensorManager;
+    float[] gData = new float[3];
+    float[] mData = new float[3];
+    float[] rMat = new float[9];
+	float[] iMat = new float[9];
+    float[] orientation = new float[3];
+    private int mAzimuth = 0;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.direction);
-        TextView bearing_view = (TextView) findViewById(R.id.bearing);
 
-        Intent loc = getIntent();
-        //TODO: find a reasonable default value.
-        double latitude = loc.getDoubleExtra(InputActivity.LAT, 0);
-        double longitude = loc.getDoubleExtra(InputActivity.LON, 0);
-
-        double bearing = direction(latitude, longitude);
-        bearing_view.setText(Double.toString(bearing));
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
-    /**
-     @param latitude latitude of the location to point towards.
-     @param longitude longitude of the location to point towards.
-
-     @return the bearing from here to the specified location.
-     **/
-
-    public double direction(double latitude, double longitude){
-        Location other = new Location("latlong");
-        other.setLatitude(latitude);
-        other.setLongitude(longitude);
-        /*
-        Next two lines are for when I get on a real device.  No guarantee they'll work right now.
-        Also need to check network for better location/use GPS to get real current location.
-        */
-//        LocationManager manager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-//        manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        double home_lat = 40.437507;
-        double home_long = -79.912736;
-        Location home = new Location("home");
-        home.setLongitude(home_long);
-        home.setLatitude(home_lat);
-
-        if (home.equals(other)){
-            return -1;
-        }
-        float bearing = home.bearingTo(other);
-
-        return bearing;
+    protected void onResume(){
+        super.onResume();
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
     }
 
+    protected void onPause(){
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy){
+
+    }
+
+        public void onSensorChanged(SensorEvent event){
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+                gData = event.values;
+            }
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+                mData = event.values;
+            }
+            //This will calculate the azimuth between front and north.  How to set it to calculate the azimuth
+            //between front and arbitrary direction?
+            if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
+                mAzimuth = (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
+            }
+            TextView azimuthView = (TextView) findViewById(R.id.azimuthView);
+            azimuthView.setText(Float.toString(mAzimuth));
+    }
 }
