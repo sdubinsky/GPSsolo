@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import android.widget.TextView;
  */
 public class DirectionActivity extends Activity implements SensorEventListener{
     private SensorManager sensorManager;
+    private final String TAG = "DirectionActivity";
     float[] gData = new float[3];
     float[] mData = new float[3];
     float[] rMat = new float[9];
@@ -36,6 +38,7 @@ public class DirectionActivity extends Activity implements SensorEventListener{
     private int mAzimuth = 0;
 
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Creating");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.direction);
 
@@ -57,19 +60,25 @@ public class DirectionActivity extends Activity implements SensorEventListener{
 
     }
 
-        public void onSensorChanged(SensorEvent event){
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                gData = event.values;
-            }
-            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-                mData = event.values;
-            }
-            //This will calculate the azimuth between front and north.  How to set it to calculate the azimuth
-            //between front and arbitrary direction?
-            if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
-                mAzimuth = (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
-            }
+    public void onSensorChanged(SensorEvent event){
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            Log.i(TAG, "accelerometer changed");
+            gData = event.values.clone();
+        }
+        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+            Log.i(TAG, "magnetic field sensor changed");
+            mData = event.values.clone();
+        }else{
+            return;
+        }
+        //This will calculate the azimuth between front and north.  How to set it to calculate the azimuth
+        //between front and arbitrary direction?
+        if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
+            Log.i(TAG, "calculating new azimuth");
+            mAzimuth = (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
             TextView azimuthView = (TextView) findViewById(R.id.azimuthView);
+            //Works.  Is unreliable.
             azimuthView.setText(Float.toString(mAzimuth));
+        }
     }
 }
