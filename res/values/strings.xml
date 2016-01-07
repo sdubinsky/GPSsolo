@@ -4,5 +4,7 @@
     <string name="button0">Point The Way</string>
     <string name="lat">Latitude</string>
     <string name="lon">Longitude</string>
-    <string name="azimuth">Azimuth</string>
+    <string name="baseAzimuth">Base Azimuth</string>
+    <string name="relativeAzimuth">Relative Azimuth</string>
+    <string name="finalAzimuth">Final Azimuth</string>
 </resources>

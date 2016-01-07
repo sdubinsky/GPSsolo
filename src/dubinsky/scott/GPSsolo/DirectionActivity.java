@@ -21,11 +21,13 @@ import android.widget.TextView;
  * http://www.journal.deviantdev.com/android-compass-azimuth-calculating/
  * http://stackoverflow.com/questions/4819626/android-phone-orientation-overview-including-compass
  * http://developer.android.com/reference/android/hardware/SensorManager.html#getOrientation(float[], float[])
+ * http://stackoverflow.com/questions/378281/lat-lon-distance-heading-lat-lon
  *
  * Given the sensor info from the accelerometer and magnetic field sensors, the phone can figure out what its
  * azimuth relative to north is.  I need to draw a line from phone to arbitrary point and find that azimuth instead.
  *
  * Also need to account for screen rotation(unless I lock the screen? That seems easiest).
+ * Consider magnetic north as well.
  */
 public class DirectionActivity extends Activity implements SensorEventListener{
     private SensorManager sensorManager;
@@ -35,7 +37,9 @@ public class DirectionActivity extends Activity implements SensorEventListener{
     float[] rMat = new float[9];
 	float[] iMat = new float[9];
     float[] orientation = new float[3];
-    private int mAzimuth = 0;
+    float otherLat = 0;
+    float otherLong = 0;
+    private double mAzimuth = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "Creating");
@@ -75,10 +79,12 @@ public class DirectionActivity extends Activity implements SensorEventListener{
         //between front and arbitrary direction?
         if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
             Log.i(TAG, "calculating new azimuth");
-            mAzimuth = (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
-            TextView azimuthView = (TextView) findViewById(R.id.azimuthView);
-            //Works.  Is unreliable.
-            azimuthView.setText(Float.toString(mAzimuth));
+            mAzimuth = ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
+
+            TextView azimuthView = (TextView) findViewById(R.id.baseAzimuthView);
+            //Works.  Is unreliable.  Need to calibrate phone.
+            azimuthView.setText(Double.toString(mAzimuth));
+
         }
     }
 }
