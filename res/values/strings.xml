@@ -7,4 +7,5 @@
     <string name="baseAzimuth">Base Azimuth</string>
     <string name="relativeAzimuth">Relative Azimuth</string>
     <string name="finalAzimuth">Final Azimuth</string>
+    <string name="parseError">Could not parse a coordinate, try again</string>
 </resources>

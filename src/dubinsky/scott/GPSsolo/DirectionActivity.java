@@ -81,6 +81,8 @@ public class DirectionActivity extends Activity implements SensorEventListener{
             Log.i(TAG, "calculating new azimuth");
             mAzimuth = ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
 
+
+
             TextView azimuthView = (TextView) findViewById(R.id.baseAzimuthView);
             //Works.  Is unreliable.  Need to calibrate phone.
             azimuthView.setText(Double.toString(mAzimuth));

@@ -16,7 +16,7 @@
     <EditText
         android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:ems="10"
         android:id="@+id/latitude"
         android:layout_gravity="left|top"
@@ -25,7 +25,7 @@
     <EditText
         android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberSigned"
         android:ems="10"
         android:id="@+id/longitude"
         android:layout_gravity="right|top"

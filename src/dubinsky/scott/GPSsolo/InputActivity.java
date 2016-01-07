@@ -24,15 +24,20 @@ public class InputActivity extends Activity {
     public void onClick(View view){
         Context context = getApplicationContext();
         String text = "You clicked the button!";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
 
         EditText lat = (EditText) findViewById(R.id.latitude);
         EditText lon = (EditText) findViewById(R.id.longitude);
-        double latitude = Double.parseDouble(lat.getText().toString());
-        double longitude = Double.parseDouble(lon.getText().toString());
 
+        double latitude = 0;
+        double longitude = 0;
+        try {
+            latitude = Double.parseDouble(lat.getText().toString());
+            longitude = Double.parseDouble(lon.getText().toString());
+        }catch(NumberFormatException e){
+            Toast errorToast = Toast.makeText(getApplicationContext(), R.string.parseError, Toast.LENGTH_SHORT);
+            errorToast.show();
+            return;
+        }
         double relativeAzimuth = RelativeAzimuth.calculateAzimuth(baseLat, baseLon, latitude, longitude);
 
         TextView azimuth = (TextView) findViewById(R.id.calculatedAzimuth);
