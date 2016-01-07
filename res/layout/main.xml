@@ -51,4 +51,11 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="45dp"/>
 
+    <TextView
+        android:layout_width="109dp"
+        android:layout_height="95dp"
+        android:text="@string/relativeAzimuth"
+        android:id="@+id/calculatedAzimuth"
+        android:layout_gravity="center_horizontal|bottom"/>
+
 </FrameLayout>
